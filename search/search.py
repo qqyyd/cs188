@@ -111,13 +111,52 @@ def depthFirstSearch(problem: SearchProblem):
 def breadthFirstSearch(problem: SearchProblem):
     """Search the shallowest nodes in the search tree first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    from util import Queue
+    
+    visited = set()
+    cur = problem.getStartState()
+    if problem.isGoalState(cur):
+        return []
+    q = Queue()
+    q.push((cur, []))  # 用元组表示状态和动作序列
+    while not q.isEmpty():
+        cur, actions = q.pop()
+        if cur in visited:
+            continue
+        visited.add(cur)
+        if problem.isGoalState(cur):
+            return actions
+        curnext = problem.getSuccessors(cur)
+        for next_state, action, _ in curnext:
+            if next_state not in visited:
+                q.push((next_state, actions + [action]))
+    return []
 
 def uniformCostSearch(problem: SearchProblem):
     """Search the node of least total cost first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
-
+    from util import PriorityQueue
+    visited = set()
+    cur = problem.getStartState()
+    if problem.isGoalState(cur):
+        return []
+    s = PriorityQueue()
+    s.push((cur, [], 0),0)  # 用元组表示状态和动作序列
+    output = []
+    cost = 0
+    cur_sum_low = 1000
+    while not s.isEmpty():
+        cur, actions,curcost = s.pop()
+        if cur in visited:
+            continue
+        visited.add(cur)
+        if problem.isGoalState(cur):
+            return actions
+        curnext = problem.getSuccessors(cur)
+        for next_state, action, next_cost in curnext:
+            if next_state not in visited:
+                s.push((next_state, actions + [action],curcost+next_cost),curcost+next_cost)
+    return []
 def nullHeuristic(state, problem=None):
     """
     A heuristic function estimates the cost from the current state to the nearest
@@ -128,7 +167,29 @@ def nullHeuristic(state, problem=None):
 def aStarSearch(problem: SearchProblem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    from util import PriorityQueue
+    visited = set()
+    cur = problem.getStartState()
+    if problem.isGoalState(cur):
+        return []
+    s = PriorityQueue()
+    s.push((cur, [], 0),0)  # 用元组表示状态和动作序列
+    output = []
+    cost = 0
+    while not s.isEmpty():
+        cur, actions,curcost = s.pop()
+        if cur in visited:
+            continue
+        visited.add(cur)
+        if problem.isGoalState(cur):
+            return actions
+        curnext = problem.getSuccessors(cur)
+        for next_state, action, next_cost in curnext:
+            if next_state not in visited:
+                total_cost = curcost+next_cost
+                Heuristic_cost = total_cost + heuristic(next_state,problem)
+                s.push((next_state, actions + [action],total_cost),Heuristic_cost)
+    return []
 
 
 # Abbreviations
