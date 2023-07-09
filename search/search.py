@@ -191,6 +191,7 @@ def aStarSearch(problem: SearchProblem, heuristic=nullHeuristic):
                 s.push((next_state, actions + [action],total_cost),Heuristic_cost)
     return []
 
+#
 
 # Abbreviations
 bfs = breadthFirstSearch
